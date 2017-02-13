@@ -44,7 +44,7 @@ function dl_setup() {
 
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus( array(
-		'primary' => esc_html__( 'Primary', 'dl' ),
+		'primary' => esc_html__( 'Primary Menu', 'dl' ),
 	) );
 
 	/*
@@ -58,6 +58,18 @@ function dl_setup() {
 		'gallery',
 		'caption',
 	) );
+
+	/*
+     * Enable support for Post Formats.
+     * See https://developer.wordpress.org/themes/functionality/post-formats/
+     */
+    add_theme_support( 'post-formats', array(
+        'aside',
+        'image',
+        'video',
+        'quote',
+        'link',
+    ) );
 
 	// Set up the WordPress core custom background feature.
 	add_theme_support( 'custom-background', apply_filters( 'dl_custom_background_args', array(
@@ -90,8 +102,8 @@ function dl_widgets_init() {
 		'name'          => esc_html__( 'Sidebar', 'dl' ),
 		'id'            => 'sidebar-1',
 		'description'   => esc_html__( 'Add widgets here.', 'dl' ),
-		'before_widget' => '<section id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</section>',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</aside>',
 		'before_title'  => '<h2 class="widget-title">',
 		'after_title'   => '</h2>',
 	) );
@@ -104,11 +116,19 @@ add_action( 'widgets_init', 'dl_widgets_init' );
 function dl_scripts() {
 	wp_enqueue_style( 'dl-style', get_stylesheet_uri() );
 	
+
+
 	wp_enqueue_style( 'dl-google-fonts', 'https://fonts.googleapis.com/css?family=Fira+Sans:400,700|Merriweather:400,700');
 
 	wp_enqueue_style( 'dl-style-main', get_template_directory_uri() . '/css/layout.css', array(), '20151215', true );
 
-	wp_enqueue_script( 'dl-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
+	wp_enqueue_style( 'dl-fontawesome', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css' );
+
+	wp_enqueue_script( 'dl-navigation', get_template_directory_uri() . '/js/navigation.js', array('jQuery'), '20151215', true );
+	wp_localize_script( 'dl-navigation', 'screenReaderText', array(
+		'expand'   => '<span class="screen-reader-text">' . __( 'expand child menu', 'dl' ) . '</span>',
+		'collapse' => '<span class="screen-reader-text">' . __( 'collapse child menu', 'dl' ) . '</span>',
+	) );
 
 	wp_enqueue_script( 'dl-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
 
